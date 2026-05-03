@@ -1,16 +1,14 @@
-//A lista de coordenadas dos municípios.
-//As populações (que geralmente definem o "peso" ou a demanda).
-//A quantidade de equipamentos (p) que devem ser instalados.
-
-
 const fs = require('fs');
 const path = require('path');
 
-//que converte coordenadas no formato GMS (Graus, Minutos, Segundos) para decimal
+// Converte GMS para decimal com limpeza de espaços extras
 function gmsParaDecimal(gmsStr) {
     if (!gmsStr) return 0;
-    // Remove símbolos e separa os números (Graus, Minutos, Segundos)
-    const partes = gmsStr.replace(/[^\d\s-]/g, ' ').trim().split(/\s+/);
+    // Remove espaços entre o sinal de menos e o número para evitar erro no parseFloat
+    const stringLimpa = gmsStr.replace(/\s+/g, '');
+    
+    // Separa os números (Graus, Minutos, Segundos)
+    const partes = stringLimpa.replace(/[^\d\s.-]/g, ' ').trim().split(/\s+/);
     const graus = parseFloat(partes[0]);
     const minutos = parseFloat(partes[1]) || 0;
     const segundos = parseFloat(partes[2]) || 0;
@@ -19,9 +17,8 @@ function gmsParaDecimal(gmsStr) {
     return graus < 0 ? decimal * -1 : decimal;
 }
 
-//função calcular distancia entre dois pontos geográficos usando a fórmula de Haversine
 function calcularDistancia(lat1, lon1, lat2, lon2) {
-    const R = 6371; // Raio da Terra em quilômetros
+    const R = 6371; 
     const dLat = (lat2 - lat1) * Math.PI / 180;
     const dLon = (lon2 - lon1) * Math.PI / 180;
     
@@ -33,48 +30,46 @@ function calcularDistancia(lat1, lon1, lat2, lon2) {
     return R * c;
 }
 
-//para ler o arquivo JSON contendo os dados dos municípios
 const caminhoArquivo = path.join(__dirname, '../data/Instancia.json');
 const conteudoRaw = fs.readFileSync(caminhoArquivo, 'utf8');
-
-//converter objetos JSON em estruturas de dados utilizáveis no JavaScript
 const dadosBrutos = JSON.parse(conteudoRaw);
 
-
-const listaMunicipios = dadosBrutos.data || dadosBrutos; 
+// 1. PRÉ-PROCESSAMENTO: Converte as coordenadas UMA ÚNICA VEZ antes dos loops
+const listaMunicipios = (dadosBrutos.data || dadosBrutos).map(m => {
+    return {
+        ...m,
+        latDec: gmsParaDecimal(m.Latitude),
+        lonDec: gmsParaDecimal(m.Longitude),
+        // Garante que a população seja um número para o cálculo do custo
+        "População": parseInt(String(m["População"] || "1").replace(/\./g, ''))
+    };
+});
 
 const matrizDistancias = [];
 
-//loop alinahado com o número de municípios para calcular as distâncias entre cada par de municípios usando a função calcularDistancia e armazenar os resultados em uma matriz de distâncias.
+// 2. CÁLCULO DA MATRIZ: Agora muito mais rápido sem chamadas de gmsParaDecimal repetidas
 for (let i = 0; i < listaMunicipios.length; i++) {
     matrizDistancias[i] = [];
-    
     for (let j = 0; j < listaMunicipios.length; j++) {
-        // Se for o mesmo município, a distância é zero
         if (i === j) {
             matrizDistancias[i][j] = 0;
             continue;
         }
 
-       // Converte as coordenadas de GMS para decimal
-        const latI = gmsParaDecimal(listaMunicipios[i].Latitude);
-        const lonI = gmsParaDecimal(listaMunicipios[i].Longitude);
-        const latJ = gmsParaDecimal(listaMunicipios[j].Latitude);
-        const lonJ = gmsParaDecimal(listaMunicipios[j].Longitude);
-
-        // Calcula e armazena na matriz
-        matrizDistancias[i][j] = calcularDistancia(latI, lonI, latJ, lonJ);
+        matrizDistancias[i][j] = calcularDistancia(
+            listaMunicipios[i].latDec, 
+            listaMunicipios[i].lonDec, 
+            listaMunicipios[j].latDec, 
+            listaMunicipios[j].lonDec
+        );
     }
 }
 
-//exporta dados processados para serem utilizados em outras partes do projeto, como o algoritmo GRASP.
 module.exports = {
     municipios: listaMunicipios,
     distancias: matrizDistancias,
-    p: 5,     // Número de equipamentos a instalar (Exemplo)
-    alfa: 0.2  // Parâmetro de aleatoriedade do GRASP
+    p: 5,     
+    alfa: 0.2 
 };
 
-// Log de sucesso para teste
-console.log(`finalizado: ${listaMunicipios.length} municipios processados.`);
-console.log(`Exemplo de distância entre index 0 e 1: ${matrizDistancias[0][1].toFixed(2)} km`);
+console.log(`Sucesso: ${listaMunicipios.length} municípios processados.`);
