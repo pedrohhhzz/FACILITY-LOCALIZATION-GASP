@@ -10,6 +10,7 @@ const distancias = meuModulo.distancias;
 function calcularCustoTotal(centrosEscolhidos, municipios, matrizDistancias) {
     let custoTotal = 0;
 
+    //percorre por todos os 102 municipios de alagoas
     for (let i = 0; i < municipios.length; i++) {
         let menorDistancia = Infinity;
 
@@ -20,8 +21,8 @@ for (let centro of centrosEscolhidos) {
             menorDistancia = d;
           }  
 }
-
-const populacao = municipios[i]["População"] || 1; 
+//
+const populacao = municipios[i]["População"] || 1; //existe pelo menoos 1 pessoa no json
 custoTotal += menorDistancia * populacao;
 }
 return custoTotal;
