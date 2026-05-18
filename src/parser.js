@@ -16,7 +16,7 @@ function gmsParaDecimal(gmsStr) {
     let decimal = Math.abs(graus) + (minutos / 60) + (segundos / 3600);
     return graus < 0 ? decimal * -1 : decimal;
 }
-
+//calcular a distancia entre dois pontos usando a fórmula de Haversine
 function calcularDistancia(lat1, lon1, lat2, lon2) {
     const R = 6371; 
     const dLat = (lat2 - lat1) * Math.PI / 180;
@@ -41,7 +41,7 @@ const listaMunicipios = (dadosBrutos.data || dadosBrutos).map(m => {
         latDec: gmsParaDecimal(m.Latitude),
         lonDec: gmsParaDecimal(m.Longitude),
         // Garante que a população seja um número para o cálculo do custo
-        "População": parseInt(String(m["População"] || "1").replace(/\./g, ''))
+        "Populacao": parseInt(String(m["Populacao"] || "1").replace(/\./g, ''))
     };
 });
 
@@ -64,6 +64,7 @@ for (let i = 0; i < listaMunicipios.length; i++) {
         );
     }
 }
+
 
 module.exports = {
     municipios: listaMunicipios,

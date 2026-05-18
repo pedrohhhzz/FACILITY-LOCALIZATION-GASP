@@ -56,7 +56,7 @@ function realizarBuscaLocal(solucaoInicial, municipios, matrizDistancias) {
             }
         }
     }
-////retorna com uma nova solução 
+//retorna com uma nova solução 
     return { melhorSolucao, melhorCusto };
 }
 
