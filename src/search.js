@@ -1,3 +1,4 @@
+//importa a função de cálculo do objetivo para avaliar o custo das soluções candidatas durante a busca local
 const { calcularObjetivo } = require('./construction');
 
 function realizarBuscaLocal(solucaoInicial, municipios, matrizDistancias) {
@@ -11,7 +12,8 @@ function realizarBuscaLocal(solucaoInicial, municipios, matrizDistancias) {
         matrizDistancias
     );
 
-    
+    //variável para controlar se houve melhoria na solução durante a busca local, 
+    // inicialmente definida como true para entrar no loop
     let houveMelhoria = true; 
 
     //loop para encontar os melhores centos 
