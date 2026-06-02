@@ -1,0 +1,13 @@
+=========================================
+      MELHOR SOLUÇÃO ENCONTRADA         
+=========================================
+Soma das Menores Distâncias (Z): 2958.93 km
+Centros escolhidos para as bases:
+ 1. Tanque d'Arca
+ 2. Carneiros
+ 3. Pilar
+ 4. Campo Grande
+ 5. Matriz de Camaragibe
+=========================================
+Tempo de Execução: 0.334 segundos
+=========================================
