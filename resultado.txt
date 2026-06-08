@@ -1,13 +1,33 @@
-=========================================
-      MELHOR SOLUÇÃO ENCONTRADA         
-=========================================
+=======================================================
+       RELATÓRIO COMPARATIVO DE DIRETRIZES (TEO)
+=======================================================
+
+-------------------------------------------------------
+HEURÍSTICA 1: GULOSA PURA (Alpha = 0.0)
+-------------------------------------------------------
+Soma das Menores Distâncias (Z): 2964.45 km
+Tempo de CPU: 0.0160 segundos
+Centros Escolhidos:
+   1. Olivença
+   2. Atalaia
+   3. Feira Grande
+   4. Matriz de Camaragibe
+   5. Água Branca
+
+-------------------------------------------------------
+HEURÍSTICA 2: META-HEURÍSTICA GRASP (Alpha = 0.2)
+-------------------------------------------------------
 Soma das Menores Distâncias (Z): 2958.93 km
-Centros escolhidos para as bases:
- 1. Tanque d'Arca
- 2. Carneiros
- 3. Pilar
- 4. Campo Grande
- 5. Matriz de Camaragibe
-=========================================
-Tempo de Execução: 0.334 segundos
-=========================================
+Tempo de CPU: 0.1560 segundos
+Centros Escolhidos:
+   1. Tanque d'Arca
+   2. Matriz de Camaragibe
+   3. Campo Grande
+   4. Pilar
+   5. Carneiros
+
+=======================================================
+ANÁLISE DE PERFORMANCE:
+A Heurística 2 (GRASP) reduziu o custo logístico em 0.19% 
+em comparação com a abordagem Gulosa Pura.
+=======================================================
